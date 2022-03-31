@@ -1,0 +1,23 @@
+package com.kh.view;
+
+import java.util.Scanner;
+
+import com.kh.controller.MemberController;
+
+//View : 사용자가 보게 될 시작적인 요소를 담당한다.
+
+public class MemberView {
+	
+	//전역으로 쓸 수 있는 Scanner 객체 생성
+	
+	private Scanner sc = new Scanner(System.in);
+	
+	//전역으로 MemberController에 요청할 수 있는 객체 생성
+	private MemberController mc = new MemberController();
+
+	public void mainMenu() {
+		
+	}
+	
+
+}
