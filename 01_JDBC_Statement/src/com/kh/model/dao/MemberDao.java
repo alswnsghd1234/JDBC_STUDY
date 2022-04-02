@@ -225,14 +225,16 @@ public class MemberDao {
 	}return m;
 }
 
-	public Member searchByName(String userName) {
+	public ArrayList<Member> searchByName(String userName) {
 		
 		Connection conn = null;
 		Statement stmt =null;
 		ResultSet rset = null;
 		Member m = null;
 		
-		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE '"+userName+"'";
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE '%"+userName+"%'";
+		
+		ArrayList<Member> list = new ArrayList<>();
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
@@ -240,10 +242,17 @@ public class MemberDao {
 			stmt=conn.createStatement();
 			
 			rset=stmt.executeQuery(sql);
+			
+			
+			
+			while(rset.next()) {
+				
+				
+				
 			if(rset.next()) {//커서가 가르킬 곳에 데이터가 있으면(즉,조회된 결과가 있으면)
 				//조회된 행에 있는 컬럼들의 데이터를 Member객체에 한번에 모아서 보낸다.
 				//매개변수 생성자로 값 넣기
-				m = new Member(rset.getInt("USERNO")
+				list.add(new Member(rset.getInt("USERNO")
 								,rset.getString("USERID")
 								,rset.getString("USERPW")
 								,rset.getString("USERNAME")
@@ -254,9 +263,9 @@ public class MemberDao {
 								,rset.getString("ADDRESS")
 								,rset.getDate("ENROLLDATE")
 								,rset.getString("GENDER")
-								);
+								));
 			}
-			
+			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -273,11 +282,97 @@ public class MemberDao {
 					e.printStackTrace();
 			}
 		}
-		return m;
-		}	
-	
+		return list;
+		}
+
+	public int updateMember(Member m) {
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		int result=0;
+		
+		String sql="UPDATE MEMBER "
+				+"SET USERPW = '"+m.getUserPw()+"'"
+				+"	,EMAIL ='"+m.getEmail()+"'"
+				+"	,PHONE ='"+m.getPhone()+"'"
+				+"	,ADDRESS=  '"+m.getAddress()+"'"
+				+" WHERE USERID='"+m.getUserId()+"'";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","JDBC","JDBC");
+			stmt=conn.createStatement();
+			
+			result=stmt.executeUpdate(sql);
+			
+			if(result>0) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+		
+		
+		
+	}
+
+	public int deleteById(String userId) {
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		int result=0;
+		
+		String sql="DELETE FROM MEMBER WHERE USERID='"+userId+"'";
+		
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","JDBC","JDBC");
+			stmt=conn.createStatement();
+			
+			result=stmt.executeUpdate(sql);
+			
+			if(result>0) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	}	
+	return result;
 	
 
-	
+	}
 }
 

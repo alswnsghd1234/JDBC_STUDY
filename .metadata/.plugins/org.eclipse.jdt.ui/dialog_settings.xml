@@ -3,6 +3,10 @@
 	<item key="org.eclipse.jdt.ui.last.selected.jre.kind2" value="2"/>
 	<item key="org.eclipse.jdt.ui.last.selected.execution.enviroment" value="JavaSE-1.8"/>
 	<item key="org.eclipse.jdt.ui.lastextjar" value="C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib"/>
+	<item key="TypeHierarchyViewPart.hierarchyview" value="2"/>
+	<item key="TypeHierarchyViewPart.qualifiednames" value="false"/>
+	<item key="TypeHierarchyViewPart.linkeditors" value="false"/>
+	<item key="TypeHierarchyViewPart.orientation" value="3"/>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item key="group_libraries" value="true"/>
 		<item key="layout" value="2"/>
@@ -64,8 +68,8 @@
 		<item key="OmitCallToSuper" value="false"/>
 	</section>
 	<section name="DialogBounds_GenerateConstructorUsingFieldsSelectionDialog">
-		<item key="DIALOG_X_ORIGIN" value="635"/>
-		<item key="DIALOG_Y_ORIGIN" value="9"/>
+		<item key="DIALOG_X_ORIGIN" value="544"/>
+		<item key="DIALOG_Y_ORIGIN" value="20"/>
 		<item key="DIALOG_WIDTH" value="668"/>
 		<item key="DIALOG_HEIGHT" value="869"/>
 		<item key="DIALOG_FONT_NAME" value="1|맑은 고딕|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|맑은 고딕"/>

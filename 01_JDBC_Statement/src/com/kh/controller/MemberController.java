@@ -73,11 +73,46 @@ public class MemberController {
 		
 		new MemberDao().searchByName(userName);
 		
-		Member m = new MemberDao().searchByName(userName);
-		if(m==null) {
+		ArrayList<Member> list  = new MemberDao().searchByName(userName);
+		if(list.isEmpty()) {
 			new MemberView().displayNodata(userName+"은 없다");
 		}else {
-			new MemberView().displayOne(m);
+			new MemberView().displayList(list);
+		}
+		
+	}
+
+	public void upateMember(String userId, String userPw, String email, String phone, String address) {
+
+		Member m = new Member();
+		
+		m.setUserId(userId);
+		m.setUserPw(userPw);
+		m.setEmail(email);
+		m.setPhone(phone);
+		m.setAddress(address);
+		
+		int result = new MemberDao().updateMember(m);
+		
+		if(result>0) {
+			//성공했으니 성공메시지를 보낸다
+			new MemberView().displaySuccess("회원 정보 변경 성공");
+		}else {
+			//실패했으니 실패메세지를 보낸다
+			new MemberView().displayFail("회원 정보 변경 실패");
+		}
+	}
+
+	public void deleteMember(String userId) {
+		
+		
+		int result = new MemberDao().deleteById(userId);
+		if(result>0) {
+			//성공했으니 성공메시지를 보낸다
+			new MemberView().displaySuccess("회원 삭제 성공");
+		}else {
+			//실패했으니 실패메세지를 보낸다
+			new MemberView().displayFail("회원 삭제 실패");
 		}
 	}
 
