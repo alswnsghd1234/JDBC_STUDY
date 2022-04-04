@@ -1,6 +1,7 @@
 package com.kh.model.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 import com.kh.common.JDBC_Template;
 import com.kh.model.dao.MemberDao;
@@ -26,10 +27,51 @@ public class MemberService {
 		Connection conn = JDBC_Template.getConnection();
 		
 		//DAO를 호출하는데 Controller한테 전달받은 요청갑소가 커넥션을 같이 넘긴다.
-		new MemberDao().insertMember(conn,m);
+		int result = new MemberDao().insertMember(conn,m);
 		
+		//결과에 따른 트랜잭션 처리 해주기
 		
-		return 0;
+		if(result>0) {//성공
+			JDBC_Template.commit(conn);
+		}else {
+			JDBC_Template.rollback(conn);
+		}
+		JDBC_Template.close(conn);
+		
+		return result;
+	}
+
+	public ArrayList<Member> selectAll() {
+
+		Connection conn = JDBC_Template.getConnection();
+		
+		ArrayList<Member> list = new MemberDao().selectAll(conn);
+		
+		JDBC_Template.close(conn);
+		
+		return list;
+	}
+
+	public Member searchById(String userId) {
+		
+		Connection conn=JDBC_Template.getConnection();
+		
+		Member m = new MemberDao().searchById(conn,userId);
+		
+		JDBC_Template.close(conn);
+		
+		return m;
+	}
+
+	public ArrayList<Member> searchByName(String userName) {
+		
+		Connection conn = JDBC_Template.getConnection();
+		
+		ArrayList<Member> list = new MemberDao().searchByName(conn, userName);
+		
+		JDBC_Template.close(conn);
+		
+		return list;
 	}
 
 }

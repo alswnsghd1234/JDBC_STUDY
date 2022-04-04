@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import com.kh.common.JDBC_Template;
 import com.kh.model.vo.Member;
 
 /*
@@ -65,27 +66,27 @@ public class MemberDao {
 			
 			result = pstmt.executeUpdate();
 			
-			if(result>0) {
-				conn.commit();
-			}else {
-				conn.rollback();
-			}
+		
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+		
+				//PreparedStatement 객체 반납
+				JDBC_Template.close(pstmt);
+
 		}
 	return result;
 	}
 	
 	//사용자가 전체조회를 요청했을때 SELECT구문을 실행해서 결과를 내뱉는 메소드
 	
-	public ArrayList<Member> selectAll(){
+	public ArrayList<Member> selectAll(Connection conn){
 		
 		//필요한 변수 세팅
 		//Connection,Statement,ResultSet,ArrayList<Member>
 		
-		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rset = null;
 		ArrayList<Member> list = new ArrayList<>(); //회원정보가 여러개면 여러개의 회원정보를
@@ -94,8 +95,6 @@ public class MemberDao {
 		String sql="SELECT * FROM MEMBER";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","JDBC","JDBC");
 			stmt = conn.createStatement();
 			//sql문 보내서 결과 받기
 			
@@ -135,33 +134,22 @@ public class MemberDao {
 				list.add(m);
 			}
 			
-			
-			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
-			try {
-				rset.close();
-				stmt.close();
-				conn.close();
-			}catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			JDBC_Template.close(rset);
+			JDBC_Template.close(stmt);
 			}
-		}
+		
 		
 		return list; //행의 데이터를 갖고있는 Member 객체들이 담겨져있는 리스트 반환
 	}
 	//사용자에게 입력받은 아이디로 해당 회원이 있는지 정보 검색 처리 메소드
 	
-	public Member searchById(String userId) {
+	public Member searchById(Connection conn, String userId) {
 		
-		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		
@@ -170,8 +158,6 @@ public class MemberDao {
 		String sql = "SELECT * FROM MEMBER WHERE USERID =?";
 				
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","JDBC","JDBC");
 			pstmt=conn.prepareStatement(sql);
 			
 			pstmt.setString(1, userId);
@@ -188,85 +174,61 @@ public class MemberDao {
 						  	,rset.getString("ADDRESS")
 						  	,rset.getString("HOBBY")
 						  	,rset.getString("ENROLLDATE"));
-				
-				
 			}
-			
-			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
+					}
+		 catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			}catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		}
+			
+			JDBC_Template.close(rset);
+			JDBC_Template.close(pstmt);
 			
 }
 		return m;
 	}
-	public ArrayList<Member> searchByName(String userName) {
-		Connection conn = null;
+	public ArrayList<Member> searchByName(Connection conn, String userName) {
+		
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
+		
 		ArrayList<Member> list = new ArrayList<>();
 		
-		//String sql ="SELECT*FROM MEMBER WHERE USERNAME LIKE ?"
-		//pstm.setString(1,"%"+userName+"%")
-		String sql ="SELECT*FROM MEMBER WHERE USERNAME LIKE '%'||?||'%'";
-		
-		
-		
+		String sql = "SELECT * FROM MEMBER WHERE USERNAME =?";
 		
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn=DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe","JDBC","JDBC");
-			
-			pstmt=conn.prepareStatement(sql);
-			
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userName);
-			rset = pstmt.executeQuery();
+			rset=pstmt.executeQuery();
 			
-
-			while(rset.next()) {
-				list.add(new Member(
-							 rset.getInt("USERNO")
-							,rset.getString("USERID")
-							,rset.getString("USERPW")
-							,rset.getString("USERNAME")
-							,rset.getString("GENDER")
-							,rset.getInt("AGE")
-							,rset.getString("EMAIL")
-							,rset.getString("PHONE")
-							,rset.getString("ADDRESS")
-							,rset.getString("HOBBY")
-							,rset.getDate("ENROLLDATE")
-							));
-		}
-		}catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(rset.next()) {
+				
+				Member m = new Member();
+				
+				m=new Member(rset.getString("USERNO")
+						  	,rset.getString("USERID")
+						  	,rset.getString("USERPW")
+						  	,rset.getString("USERNAME")
+						  	,rset.getInt("AGE")
+						  	,rset.getString("EMAIL")
+						  	,rset.getString("ADDRESS")
+						  	,rset.getString("HOBBY")
+						  	,rset.getString("ENROLLDATE"));
+				
+				list.add(m);
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			try {
-				rset.close();
-				pstmt.close();
-				conn.close();
-			}catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		}
+			
+			JDBC_Template.close(rset);
+			JDBC_Template.close(pstmt);
+			
+}
 		
-		}
+		
 		return list;
 	}
 

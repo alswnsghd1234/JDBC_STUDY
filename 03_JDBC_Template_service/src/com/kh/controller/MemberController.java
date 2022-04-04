@@ -46,7 +46,7 @@ public class MemberController {
 		//결과값을 담을 변수
 		//SELECT-ResultSet->ArrayList<Member>
 		
-		ArrayList<Member> list = new MemberDao().selectAll();
+		ArrayList<Member> list =new MemberService().selectAll();
 		//DAO에서 작업을 끝마친 결과를 전달받아 해당 결과를 토대로
 		//어떠한 화면을 보여줄지 정해서 VIEW에 전달한다.
 		
@@ -60,7 +60,7 @@ public class MemberController {
 	//사용자가 입력한 아이디로 검색 요청을 처리해주는 메소드
 	public void searchById(String userId) {
 		
-		Member m=new MemberDao().searchById(userId);
+		Member m = new MemberService().searchById(userId);
 		
 		if(m==null) {
 			new MemberView().displayNodata(userId+"에 해당하는 조회결과가 없다");
@@ -72,13 +72,14 @@ public class MemberController {
 
 	public void searchByName(String userName) {
 	
-		ArrayList<Member> list=new MemberDao().searchByName(userName);
+		ArrayList<Member> list = new MemberService().searchByName(userName);
 		
 		if(list.isEmpty()) {
 			new MemberView().displayNodata(userName+"에 해당하는 조회결과가 없다");
 		}else {
 			new MemberView().displayList(list);
 		}
+		
 	}
 
 	public void upateMember(String userId, String userPw, String email, String phone, String address) {
