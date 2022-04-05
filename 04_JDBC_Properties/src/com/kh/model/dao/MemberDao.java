@@ -1,5 +1,8 @@
 package com.kh.model.dao;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import com.kh.common.JDBC_Template;
 import com.kh.model.vo.Member;
@@ -47,8 +51,19 @@ public class MemberDao {
 		int result =0; //처리된 결과(처리된 행수)를 담을 변수
 		PreparedStatement pstmt = null; // SQL문 실행 후 결과를 받기위한 변수
 		
-		String sql = "INSERT INTO MEMBER VALUES(SEQ_USERNO.NEXTVAL,?,?,?,?,?,?,?,?,?,DEFAULT)";
 		
+		Properties prop = new Properties();
+		
+		try {
+			prop.load(new FileInputStream("resources/driver.xml"));
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		String sql = prop.getProperty("insertMember");
 		
 		//1) JDBC 등록
 		try {	
