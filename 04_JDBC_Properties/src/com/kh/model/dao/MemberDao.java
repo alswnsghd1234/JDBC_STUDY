@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
 import com.kh.common.JDBC_Template;
@@ -25,6 +26,22 @@ import com.kh.model.vo.Member;
 
 public class MemberDao {
 	
+	private Properties prop = new Properties();
+	
+	public MemberDao() {
+		try {
+			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+		} catch (InvalidPropertiesFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	/*
 	 * JDBC용 객체
 	 * -Connection : DB의 연결정보를 담고 있는 객체(IP주소,PORT번호,계정명,비밀번호)
@@ -52,17 +69,17 @@ public class MemberDao {
 		PreparedStatement pstmt = null; // SQL문 실행 후 결과를 받기위한 변수
 		
 		
-		Properties prop = new Properties();
-		
-		try {
-			prop.load(new FileInputStream("resources/driver.xml"));
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		String sql = prop.getProperty("insertMember");
 		
 		//1) JDBC 등록
@@ -106,8 +123,18 @@ public class MemberDao {
 		ResultSet rset = null;
 		ArrayList<Member> list = new ArrayList<>(); //회원정보가 여러개면 여러개의 회원정보를
 		
-		//실행할 sql문
-		String sql="SELECT * FROM MEMBER";
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		String sql = prop.getProperty("selectAll");
 		
 		try {
 			stmt = conn.createStatement();
@@ -170,7 +197,18 @@ public class MemberDao {
 		
 		Member m = null;
 		
-		String sql = "SELECT * FROM MEMBER WHERE USERID =?";
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		String sql = prop.getProperty("searchById");
 				
 		try {
 			pstmt=conn.prepareStatement(sql);
@@ -209,7 +247,18 @@ public class MemberDao {
 		
 		ArrayList<Member> list = new ArrayList<>();
 		
-		String sql = "SELECT * FROM MEMBER WHERE USERNAME LIKE '%'||?||'%'";
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		String sql = prop.getProperty("searchByName");
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -251,14 +300,19 @@ public class MemberDao {
 		
 		int result= 0;
 		PreparedStatement pstmt = null;
-		String sql = "UPDATE MEMBER "
-				+	 "SET "
-				+    "USERPW=?"
-				+    ",EMAIL=?"
-				+    ",PHONE=?"
-				+    ",ADDRESS=? "
-				+    "WHERE USERID=?";
 		
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		String sql = prop.getProperty("updateMember");
 		try {
 		pstmt=conn.prepareStatement(sql);
 		pstmt.setString(1, m.getUserPw());
@@ -284,7 +338,18 @@ public class MemberDao {
 		
 		PreparedStatement pstmt = null;
 		
-		String sql="DELETE FROM MEMBER WHERE USERID =?";
+//		Properties prop = new Properties();
+//		
+//		try {
+//			prop.loadFromXML(new FileInputStream("resources/query.xml"));
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		String sql = prop.getProperty("deleteMember");
 		
 		try {
 			pstmt=conn.prepareStatement(sql);

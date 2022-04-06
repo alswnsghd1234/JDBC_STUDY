@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>query xml</comment>
+<entry key="insertMember">INSERT INTO PRODUCT VALUES(SEQ_PRODUCTID.NEXTVAL,?,?,?,?,?,?,?,?,?,DEFAULT)</entry>
+<entry key="selectAll">SELECT * FROM PRODUCT</entry>
+<entry key="searchById">SELECT * FROM PRODUCT WHERE PRODUCTID =?</entry>
+<entry key="searchByName">SELECT * FROM PRODUCT WHERE PRODUCTNAME LIKE '%'||?||'%'</entry>
+<entry key="updateMember">UPDATE PRODUCT 
+				SET 
+				PRODUCTNAME=?
+				,PRICE=?
+				,DESCRIPTION=?
+				,STOCK=? 
+				WHERE PRODUCTID=?</entry>
+<entry key="deleteMember">DELETE FROM PRODUCT WHERE PRODUCTID =?</entry>
+</properties>
